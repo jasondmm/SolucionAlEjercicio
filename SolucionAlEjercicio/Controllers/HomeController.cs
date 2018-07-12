@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using static SolucionAlEjercicio.Models.JSONModel;
 
 namespace SolucionAlEjercicio.Controllers
 {
@@ -12,27 +13,32 @@ namespace SolucionAlEjercicio.Controllers
     {
         public ActionResult Index()
         {
+            List<Base> oBase = new List<Base>();
+            List<string> oCypher = new List<string>();
+            List<List<Values>> oValues = new List<List<Values>>();
+            List<string> oWords = new List<string>();
+
             try
             {
                 using (StreamReader r = new StreamReader(Server.MapPath("~/App_Data/json/base.json")))
                 {
                     string json = r.ReadToEnd();
-                    List<Base> oBase = JsonConvert.DeserializeObject<List<Base>>(json);
+                    oBase = JsonConvert.DeserializeObject<List<Base>>(json);
                 }
                 using (StreamReader r = new StreamReader(Server.MapPath("~/App_Data/json/cypher.json")))
                 {
                     string json = r.ReadToEnd();
-                    List<string> oBase = JsonConvert.DeserializeObject<List<string>>(json);
+                    oCypher= JsonConvert.DeserializeObject<List<string>>(json);
                 }
                 using (StreamReader r = new StreamReader(Server.MapPath("~/App_Data/json/values.json")))
                 {
                     string json = r.ReadToEnd();
-                    List< List<Values>>oBase2 = JsonConvert.DeserializeObject<List<List<Values>>>(json);
+                    oValues = JsonConvert.DeserializeObject<List<List<Values>>>(json);
                 }
                 using (StreamReader r = new StreamReader(Server.MapPath("~/App_Data/json/words.json")))
                 {
                     string json = r.ReadToEnd();
-                    List<string> oBase = JsonConvert.DeserializeObject<List<string>>(json);
+                    oWords = JsonConvert.DeserializeObject<List<string>>(json);
                 }
             }
             catch(Exception e)
@@ -62,15 +68,5 @@ namespace SolucionAlEjercicio.Controllers
 
 
 
-    class Base
-    {
-        public string source { get; set; }
-        public string replacement { get; set; }
-    }
-    class Values
-    {
-        public int order { get; set; }
-        public int rule { get; set; }
-        public bool isTermination { get; set; }
-    }
+    
 }
