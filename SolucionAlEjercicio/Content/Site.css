@@ -22,3 +22,23 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+
+div#dvTabla {
+    margin: 50px;
+}
+
+table#resultado {
+    margin: auto;
+}
+
+table#resultado td {
+    font-size: 1em;
+    line-height: 0.8;
+    border: 1px solid black;
+    width: 25px;
+    height: 25px;
+    padding: 6px;
+    text-align: center;
+}

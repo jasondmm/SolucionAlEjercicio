@@ -45,9 +45,21 @@ namespace SolucionAlEjercicio.Controllers
             {
                 var t = 0;
             }
+            List<string> oResultado = new List<string>();
+            for(int i = 0; i < oValues.Count; i++)
+            {
+                oValues[i].Sort((a, b) => a.order > b.order ? 1 : a.order < b.order ? -1 : 0);
+                string sLineaResultado = oCypher[i];
 
+                for (int j = 0; j < oValues[i].Count; j++)
+                {
+                    var nRegla = oValues[i][j].rule;
+                    sLineaResultado = sLineaResultado.Replace(oBase[nRegla].source, oBase[nRegla].replacement);
+                }
+                oResultado.Add(sLineaResultado);
+            }
 
-
+            ViewData["Datos"] = oResultado;
             return View(); 
         }
 
