@@ -48,7 +48,7 @@ namespace SolucionAlEjercicio.Controllers
 
 
 
-            return View();
+            return View(); 
         }
 
         public ActionResult About()
