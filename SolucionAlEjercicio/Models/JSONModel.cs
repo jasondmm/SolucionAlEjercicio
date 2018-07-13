@@ -18,5 +18,12 @@ namespace SolucionAlEjercicio.Models
             public int rule { get; set; }
             public bool isTermination { get; set; }
         }
+        public class DatosJSON
+        {
+            public List<Base> oBase { get; set; }
+            public List<string> oCypher { get; set; }
+            public List<List<Values>> oValues { get; set; }
+            public List<string> oWords { get; set; }
+        }
     }
 }
