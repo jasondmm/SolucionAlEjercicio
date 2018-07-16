@@ -42,3 +42,8 @@ table#resultado td {
     padding: 6px;
     text-align: center;
 }
+
+table#resultado th {
+    text-align: center;
+    font-size: 75%;
+}

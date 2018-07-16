@@ -18,11 +18,18 @@ namespace SolucionAlEjercicio.Controllers
 
             ViewData["Datos"] = oDatos.Lines;
 
-
-
             return View(); 
         }
 
-        
+        public new ActionResult Resolve()
+        {
+            var oDatos = new Solution_BL().DecypherPuzzle();
+
+            var t = new Solution_BL().Resolve(oDatos);
+
+            ViewData["Datos"] = oDatos.Lines;
+
+            return View("Index");
+        }
     }
 }

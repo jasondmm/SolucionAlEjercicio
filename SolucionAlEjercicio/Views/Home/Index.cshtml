@@ -3,16 +3,32 @@
 }
 
 <div id="dvTabla">
-    <table id="resultado">
-        @{var oDatos = (List<string>)ViewData["Datos"]; }
-        @foreach(var linea in oDatos)
-        {
-            <tr>
-                @foreach(var letra in linea)
+    <a href="/home/resolve/">
+        <table id="resultado">
+            @{var oDatos = (List<string>)ViewData["Datos"]; }
+            @for (int linea = 0; linea < oDatos.Count; linea++)
+            {
+                if(linea == 0)
                 {
-                    <td>@letra</td>
+                <tr>
+                    <th></th>
+                    @for (int letra = 0; letra < oDatos[linea].Length; letra++)
+                    {
+                        <th>@(letra)</th>
+                    }
+                </tr>
                 }
-            </tr>
-        }
-    </table>
+                <tr>
+                @for (int letra = 0; letra < oDatos[linea].Length; letra++)
+                {
+                    if (letra == 0)
+                    {
+                        <th>@(linea)</th>
+                    }
+                    <td>@oDatos[linea][letra]</td>
+                }
+                </tr>
+            }
+        </table>
+    </a>
 </div>
