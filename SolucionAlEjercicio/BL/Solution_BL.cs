@@ -7,274 +7,52 @@ using System.Web;
 //using static SolucionAlEjercicio.Models.JSONModel;
 using static SolucionAlEjercicio.Models.JSONModel;
 
+
+
+
+
+
 namespace SolucionAlEjercicio.BL
 {
     public class Solution_BL
     {
-        private string palabraEncontrada = "";
-        private string palabra = "";
-        private List<Location> oLocations = new List<Location>();
-
-        private List<Location> FindWord(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter, string sDirection)
-        {
-            var letra = oWord[currentLetter];
-            palabra = String.Join("", oWord);
-
-            if (currentRow >= oMatrix.Length || currentCol >= oMatrix[currentRow].Length) // no hay mas letras en la sopa
-                return null;
-
-            if(currentLetter == 0)
-            {
-                oLocations.Add(new Location(currentRow, currentCol, "N"));
-
-                palabraEncontrada += oWord[currentLetter];
-                if (palabra == palabraEncontrada)
-                {
-                    return oLocations;
-                }
-
-                return FindWord(oMatrix, currentRow, currentCol, oWord, currentLetter + 1, "");
-
-            }
-
-            Location res = null;
-            if (sDirection == "")
-            {
-                res = FindN(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(new Location(res.Row, res.Col, res.NextPosition));
-
-                    palabraEncontrada += oWord[currentLetter];
-                    if (palabra == palabraEncontrada)
-                    {
-                        return oLocations;
-                    }
-
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter + 1, "");
-                }
-                sDirection = "NE";
-            }
-
-            if (sDirection == "NE" || sDirection == "")
-            {
-                res = FindNE(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(new Location(res.Row, res.Col, res.NextPosition));
-
-                    palabraEncontrada += oWord[currentLetter];
-                    if (palabra == palabraEncontrada)
-                    {
-                        return oLocations;
-                    }
-
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter + 1, "");
-                }
-                sDirection = "E";
-            }
-
-            if (sDirection == "E" || sDirection == "")
-            {
-                res = FindE(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(new Location(res.Row, res.Col, res.NextPosition));
-
-                    palabraEncontrada += oWord[currentLetter];
-                    if (palabra == palabraEncontrada)
-                    {
-                        return oLocations;
-                    }
-
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter + 1, "");
-                }
-                sDirection = "SE";
-            }
-
-            if (sDirection == "SE" || sDirection == "")
-            {
-                res = FindSE(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(new Location(res.Row, res.Col, res.NextPosition));
-
-                    palabraEncontrada += oWord[currentLetter];
-                    if (palabra == palabraEncontrada)
-                    {
-                        return oLocations;
-                    }
-
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter + 1, "");
-                }
-                sDirection = "S";
-            }
-
-            if (sDirection == "S" || sDirection == "")
-            {
-                res = FindS(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(new Location(res.Row, res.Col, res.NextPosition));
-
-                    palabraEncontrada += oWord[currentLetter];
-                    if (palabra == palabraEncontrada)
-                    {
-                        return oLocations;
-                    }
-
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter + 1, "");
-                }
-                sDirection = "SW";
-            }
-            if (sDirection == "SW" || sDirection == "")
-            {
-                res = FindSW(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(new Location(res.Row, res.Col, res.NextPosition));
-
-                    palabraEncontrada += oWord[currentLetter];
-                    if (palabra == palabraEncontrada)
-                    {
-                        return oLocations;
-                    }
-
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter + 1, "");
-                }
-                sDirection = "W";
-            }
-
-            if (sDirection == "W" || sDirection == "")
-            {
-                res = FindW(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(new Location(res.Row, res.Col, res.NextPosition));
-
-                    palabraEncontrada += oWord[currentLetter];
-                    if (palabra == palabraEncontrada)
-                    {
-                        return oLocations;
-                    }
-
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter + 1, "");
-                }
-                sDirection = "NW";
-            }
-
-            if (sDirection == "NW" || sDirection == "")
-            {
-                res = FindNW(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(new Location(res.Row, res.Col, res.NextPosition));
-
-                    palabraEncontrada += oWord[currentLetter];
-                    if (palabra == palabraEncontrada)
-                    {
-                        return oLocations;
-                    }
-
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter + 1, "");
-                }
-                sDirection = "";
-            }
-
-            var nNextPosition = "";
-            Location oLastValidPosition = null;
-            
-            if (oLocations.Count > 0) // no encontró la letra
-            {
-                if(oLocations.Count == 1)
-                {
-                    palabraEncontrada = "";
-                    oLocations.Clear();
-                    return null;
-                }
-                nNextPosition = oLocations.Last().NextPosition;
-                oLocations.RemoveAt(oLocations.Count - 1);
-                if (oLocations.Count == 0)
-                {
-                    palabraEncontrada = "";
-                    oLocations.Clear();
-                    return null;
-                }
-                oLastValidPosition = oLocations.Last();
-                currentLetter--;
-                palabraEncontrada = palabraEncontrada.Substring(0, palabraEncontrada.Length - 1);
-            }
-            if (oLocations.Count == 0)
-            {
-                palabraEncontrada = "";
-                return null;
-            }
-
-            return FindWord(oMatrix, oLastValidPosition.Row, oLastValidPosition.Col, oWord, currentLetter, nNextPosition);
-        }
-
-        private string GetNextPosition(string sPosition)
-        {
-            switch(sPosition)
-            {
-                case "N":
-                    return "NE";
-                case "NE":
-                    return "E";
-                case "E":
-                    return "SE";
-                case "SE":
-                    return "S";
-                case "S":
-                    return "SW";
-                case "SW":
-                    return "W";
-                case "W":
-                    return "NW";
-                case "NW":
-                    return "N";
-                default: return "";
-            }
-        }
-
-        public List<List<Location>> Resolve(Puzzle oPuzzle)
+        public List<List<Location>> ResolvePuzzle(Puzzle oPuzzle)
         {
             List<List<Location>> oSolutions = new List<List<Location>>();
             var oMatrix = oPuzzle.Lines.ConvertAll(item => item.ToCharArray()).ToArray();
 
-
-            oPuzzle.Words.ForEach(item =>
+            oPuzzle.Words.ForEach(item => 
             {
                 var aWord = item.ToCharArray();
-                oLocations.Clear();
-                palabraEncontrada = "";
 
                 List<Location> oFirstLetterLocation = new List<Location>();
 
+                // find for all the occurences of the first letter of the word to find
                 for (int i = 0; i < oPuzzle.Lines.Count; i++)
                 {
                     for (int j = 0; j < oPuzzle.Lines[i].Length; j++)
                     {
                         if (oPuzzle.Lines[i][j] == aWord[0])
                         {
-                            oFirstLetterLocation.Add(new Location(i, j, ""));
+                            oFirstLetterLocation.Add(new Location(i, j, aWord[0], ""));
                         }
                     }
                 }
 
-                var tytyt = String.Join("", aWord);
-
+                // according to the initial letter found, complete the search of every word and posibility
                 if (oFirstLetterLocation.Count > 0)
                 {
                     foreach (var oFirstLocation in oFirstLetterLocation)
                     {
-                        var sol = FindWord(oMatrix, oFirstLocation.Row, oFirstLocation.Col, aWord, 0, oFirstLocation.NextPosition);
-                        if (sol != null)
+                        var oSolution = FindWord(oMatrix, oFirstLocation.row, oFirstLocation.column, aWord, 0, oFirstLocation.NextPosition, new List<Location>());
+                        if (oSolution != null)
                         {
-                            oSolutions.Add(sol);
-                            break;
+                            oSolutions.Add(oSolution); // solution found
+                            break; // next word
                         }
                     }
+
+                    //oSolutions.Add(null);  // no solutions found for this word
                 }
                 else
                     oSolutions.Add(null);
@@ -284,7 +62,162 @@ namespace SolucionAlEjercicio.BL
         }
 
         /// <summary>
-        /// Aplicar el algoritmo Markov para decifrar la Puzzle de letras
+        /// Recursive algorithm to find a word on the puzzle
+        /// </summary>
+        /// <param name="oMatrix"></param>
+        /// <param name="currentRow"></param>
+        /// <param name="currentCol"></param>
+        /// <param name="oWord"></param>
+        /// <param name="currentLetterIndex"></param>
+        /// <param name="sDirection"></param>
+        /// <param name="oLocations"></param>
+        /// <returns></returns>
+        private List<Location> FindWord(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetterIndex, string sDirection, List<Location> oLocations)
+        {
+            string sCurrentWord = String.Join("", oWord);
+
+            if(currentLetterIndex == 0)
+            {
+                oLocations.Add(new Location(currentRow, currentCol, oWord[currentLetterIndex], "N"));
+                if (sCurrentWord == GetStringFromLocationsList(oLocations))
+                    return oLocations;
+
+                return FindWord(oMatrix, currentRow, currentCol, oWord, currentLetterIndex + 1, "", oLocations);
+
+            }
+
+            Location oLetterLocation = null;
+            if (sDirection == "")
+            {
+                oLetterLocation = FindN(oMatrix, currentRow, currentCol, oWord, currentLetterIndex);
+                if (oLetterLocation != null)
+                {
+                    oLocations.Add(oLetterLocation);
+                    if (sCurrentWord == GetStringFromLocationsList(oLocations))
+                        return oLocations;
+
+                    return FindWord(oMatrix, oLetterLocation.row, oLetterLocation.column, oWord, currentLetterIndex + 1, "", oLocations);
+                }
+                sDirection = "NE";
+            }
+
+            if (sDirection == "NE" || sDirection == "")
+            {
+                oLetterLocation = FindNE(oMatrix, currentRow, currentCol, oWord, currentLetterIndex);
+                if (oLetterLocation != null)
+                {
+                    oLocations.Add(oLetterLocation);
+                    if (sCurrentWord == GetStringFromLocationsList(oLocations))
+                        return oLocations;
+
+                    return FindWord(oMatrix, oLetterLocation.row, oLetterLocation.column, oWord, currentLetterIndex + 1, "", oLocations);
+                }
+                sDirection = "E";
+            }
+
+            if (sDirection == "E" || sDirection == "")
+            {
+                oLetterLocation = FindE(oMatrix, currentRow, currentCol, oWord, currentLetterIndex);
+                if (oLetterLocation != null)
+                {
+                    oLocations.Add(oLetterLocation);
+                    if (sCurrentWord == GetStringFromLocationsList(oLocations))
+                        return oLocations;
+
+                    return FindWord(oMatrix, oLetterLocation.row, oLetterLocation.column, oWord, currentLetterIndex + 1, "", oLocations);
+                }
+                sDirection = "SE";
+            }
+
+            if (sDirection == "SE" || sDirection == "")
+            {
+                oLetterLocation = FindSE(oMatrix, currentRow, currentCol, oWord, currentLetterIndex);
+                if (oLetterLocation != null)
+                {
+                    oLocations.Add(oLetterLocation);
+                    if (sCurrentWord == GetStringFromLocationsList(oLocations))
+                        return oLocations;
+
+                    return FindWord(oMatrix, oLetterLocation.row, oLetterLocation.column, oWord, currentLetterIndex + 1, "", oLocations);
+                }
+                sDirection = "S";
+            }
+
+            if (sDirection == "S" || sDirection == "")
+            {
+                oLetterLocation = FindS(oMatrix, currentRow, currentCol, oWord, currentLetterIndex);
+                if (oLetterLocation != null)
+                {
+                    oLocations.Add(oLetterLocation);
+                    if (sCurrentWord == GetStringFromLocationsList(oLocations))
+                        return oLocations;
+
+                    return FindWord(oMatrix, oLetterLocation.row, oLetterLocation.column, oWord, currentLetterIndex + 1, "", oLocations);
+                }
+                sDirection = "SW";
+            }
+            if (sDirection == "SW" || sDirection == "")
+            {
+                oLetterLocation = FindSW(oMatrix, currentRow, currentCol, oWord, currentLetterIndex);
+                if (oLetterLocation != null)
+                {
+                    oLocations.Add(oLetterLocation);
+                    if (sCurrentWord == GetStringFromLocationsList(oLocations))
+                        return oLocations;
+
+                    return FindWord(oMatrix, oLetterLocation.row, oLetterLocation.column, oWord, currentLetterIndex + 1, "", oLocations);
+                }
+                sDirection = "W";
+            }
+
+            if (sDirection == "W" || sDirection == "")
+            {
+                oLetterLocation = FindW(oMatrix, currentRow, currentCol, oWord, currentLetterIndex);
+                if (oLetterLocation != null)
+                {
+                    oLocations.Add(oLetterLocation);
+                    if (sCurrentWord == GetStringFromLocationsList(oLocations))
+                        return oLocations;
+
+                    return FindWord(oMatrix, oLetterLocation.row, oLetterLocation.column, oWord, currentLetterIndex + 1, "", oLocations);
+                }
+                sDirection = "NW";
+            }
+
+            if (sDirection == "NW" || sDirection == "")
+            {
+                oLetterLocation = FindNW(oMatrix, currentRow, currentCol, oWord, currentLetterIndex);
+                if (oLetterLocation != null)
+                {
+                    oLocations.Add(oLetterLocation);
+                    if (sCurrentWord == GetStringFromLocationsList(oLocations))
+                        return oLocations;
+
+                    return FindWord(oMatrix, oLetterLocation.row, oLetterLocation.column, oWord, currentLetterIndex + 1, "", oLocations);
+                }
+                sDirection = "";
+            }
+
+            var nNextPosition = "";
+            Location oLastValidPosition = null;
+
+            // letter not found
+            if(oLocations.Count == 1) // if there's only one letter left --> the added at first 
+            { //search for another word
+                return null;
+            }
+
+            //searches for the next position and letter to look for 
+            nNextPosition = oLocations.Last().NextPosition;
+            oLocations.RemoveAt(oLocations.Count - 1);
+            oLastValidPosition = oLocations.Last();
+            currentLetterIndex--;
+
+            return FindWord(oMatrix, oLastValidPosition.row, oLastValidPosition.column, oWord, currentLetterIndex, nNextPosition, oLocations);
+        }
+
+        /// <summary>
+        /// Apply Markov's algorithm to find the puzzle
         /// </summary>
         /// <param name="oData"></param>
         /// <returns></returns>
@@ -316,9 +249,9 @@ namespace SolucionAlEjercicio.BL
         }
 
         /// <summary>
-        /// Obtiene los datos con los que se va a trabajar
+        /// Gets the data needeed
         /// </summary>
-        /// <returns>los datos como objetos</returns>
+        /// <returns></returns>
         private JSONData GetData(string sOrigin)
         { // http, fs, bd
             JSONData oData = new JSONData();
@@ -348,365 +281,102 @@ namespace SolucionAlEjercicio.BL
         }
 
         #region NESW
-        public Location FindN(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter)
+
+        private Location FindN(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetterIndex)
         {
             if (currentRow == 0)
                 return null;
-            else if (oMatrix[currentRow - 1][currentCol] == oWord[currentLetter])
+            else if (oMatrix[currentRow - 1][currentCol] == oWord[currentLetterIndex])
             {
-                return new Location(currentRow - 1, currentCol, "NE");
+                return new Location(currentRow - 1, currentCol, oWord[currentLetterIndex], "NE");
             }
             else
                 return null;
         }
-        public Location FindNE(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter)
+        private Location FindNE(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetterIndex)
         {
             if (currentRow == 0 || currentCol == (oMatrix[currentRow].Length - 1))
                 return null;
-            else if (oMatrix[currentRow - 1][currentCol + 1] == oWord[currentLetter])
+            else if (oMatrix[currentRow - 1][currentCol + 1] == oWord[currentLetterIndex])
             {
-                return new Location(currentRow - 1, currentCol + 1, "E");
+                return new Location(currentRow - 1, currentCol + 1, oWord[currentLetterIndex], "E");
             }
             else
                 return null;
         }
-        public Location FindE(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter)
+        private Location FindE(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetterIndex)
         {
             if (currentCol == (oMatrix[currentRow].Length - 1))
                 return null;
-            else if (oMatrix[currentRow][currentCol + 1] == oWord[currentLetter])
+            else if (oMatrix[currentRow][currentCol + 1] == oWord[currentLetterIndex])
             {
-                return new Location(currentRow, currentCol + 1, "SE");
+                return new Location(currentRow, currentCol + 1, oWord[currentLetterIndex], "SE");
             }
             else
                 return null;
         }
-        public Location FindSE(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter)
+        private Location FindSE(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetterIndex)
         {
             if ((oMatrix.Length-1) == currentRow || currentCol == (oMatrix[currentRow].Length - 1))
                 return null;
-            else if (oMatrix[currentRow + 1][currentCol + 1] == oWord[currentLetter])
+            else if (oMatrix[currentRow + 1][currentCol + 1] == oWord[currentLetterIndex])
             {
-                return new Location(currentRow + 1, currentCol + 1, "S");
+                return new Location(currentRow + 1, currentCol + 1, oWord[currentLetterIndex], "S");
             }
             else
                 return null;
         }
-        public Location FindS(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter)
+        private Location FindS(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetterIndex)
         {
             if ((oMatrix.Length - 1) == currentRow)
                 return null;
-            else if (oMatrix[currentRow + 1][currentCol] == oWord[currentLetter])
+            else if (oMatrix[currentRow + 1][currentCol] == oWord[currentLetterIndex])
             {
-                return new Location(currentRow + 1, currentCol, "SW");
+                return new Location(currentRow + 1, currentCol, oWord[currentLetterIndex], "SW");
             }
             else
                 return null;
         }
-        public Location FindSW(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter)
+        private Location FindSW(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetterIndex)
         {
             if ((oMatrix.Length - 1) == currentRow || (currentCol) == 0)
                 return null;
-            else if (oMatrix[currentRow + 1][currentCol - 1] == oWord[currentLetter])
+            else if (oMatrix[currentRow + 1][currentCol - 1] == oWord[currentLetterIndex])
             {
-                return new Location(currentRow + 1, currentCol - 1, "W");
+                return new Location(currentRow + 1, currentCol - 1, oWord[currentLetterIndex], "W");
             }
             else
                 return null;
         }
-        public Location FindW(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter)
+        private Location FindW(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetterIndex)
         {
             if (currentCol == 0)
                 return null;
-            else if (oMatrix[currentRow][currentCol - 1] == oWord[currentLetter])
+            else if (oMatrix[currentRow][currentCol - 1] == oWord[currentLetterIndex])
             {
-                return new Location(currentRow, currentCol - 1, "NW");
+                return new Location(currentRow, currentCol - 1, oWord[currentLetterIndex], "NW");
             }
             else
                 return null;
         }
-        public Location FindNW(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter)
+        private Location FindNW(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetterIndex)
         {
             if (currentRow == 0 || currentCol == 0)
                 return null;
-            else if (oMatrix[currentRow - 1][currentCol - 1] == oWord[currentLetter])
+            else if (oMatrix[currentRow - 1][currentCol - 1] == oWord[currentLetterIndex])
             {
-                return new Location(currentRow - 1, currentCol - 1, "N");
+                return new Location(currentRow - 1, currentCol - 1, oWord[currentLetterIndex], "N");
             }
             else
                 return null;
         }
+
+        
         #endregion
 
-        private List<Location> FindWord2(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter, string sDirection)
+        private string GetStringFromLocationsList(List<Location> oLocationsList)
         {
-            var letra = oWord[currentLetter];
-            palabra = String.Join("", oWord);
-            //if(sDirection)
-            if (currentRow >= oMatrix.Length || currentCol >= oMatrix[currentRow].Length) // no hay mas letras en la sopa
-                return null;
-            else if (currentCol == oMatrix[currentRow].Length - 1) // ultima columna
-                return FindWord(oMatrix, currentRow + 1, 0, oWord, currentLetter, "N");
-
-            if (oMatrix[currentRow][currentCol] == oWord[currentLetter]) // letra encontrada
-            {
-                if (currentLetter == 0)
-                    oLocations.Add(new Location(currentRow, currentCol, "E"));
-                else
-                    oLocations.Add(new Location(currentRow, currentCol, GetNextPosition(sDirection)));
-
-                palabraEncontrada += oWord[currentLetter];
-                if (palabra == palabraEncontrada)
-                {
-                    //oLocations.Add(new Location(currentRow, currentCol, ""));
-                    return oLocations;
-                }
-
-                return FindWord(oMatrix, currentRow, currentCol, oWord, currentLetter + 1, "N");
-            }
-
-            Location res = null;
-            if (sDirection == "N" || sDirection == "")
-            {
-                res = FindN(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-            }
-
-            if (sDirection == "NE" || sDirection == "")
-            {
-                res = FindNE(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-            }
-
-            if (sDirection == "E" || sDirection == "")
-            {
-                res = FindE(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-            }
-
-            if (sDirection == "SE" || sDirection == "")
-            {
-                res = FindSE(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-            }
-
-            if (sDirection == "S" || sDirection == "")
-            {
-                res = FindS(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-            }
-            if (sDirection == "SW" || sDirection == "")
-            {
-                res = FindSW(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-            }
-
-            if (sDirection == "W" || sDirection == "")
-            {
-                res = FindW(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-            }
-
-            if (sDirection == "NW" || sDirection == "")
-            {
-                res = FindNW(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-            }
-
-            var nNextPosition = "";
-            // no encontró la letra
-            if (oLocations.Count > 0)
-            {
-                nNextPosition = oLocations.Last().NextPosition;
-                if (oLocations.Count == 1)
-                {
-                    oLocations.RemoveAt(oLocations.Count - 1);
-                    return null;
-                }
-                oLocations.RemoveAt(oLocations.Count - 1);
-            }
-            else
-            {
-                if (currentLetter > 0)
-                    currentLetter--;
-                nNextPosition = "N";
-                palabraEncontrada = palabraEncontrada.Substring(0, palabraEncontrada.Length - 1);
-            }
-
-            return FindWord(oMatrix, currentRow, currentCol + 1, oWord, currentLetter, nNextPosition);
+            return String.Join("", oLocationsList.ConvertAll(item => item.character));
         }
-
-        private List<Location> FindWord3(char[][] oMatrix, int currentRow, int currentCol, char[] oWord, int currentLetter, string sDirection)
-        {
-            var letra = oWord[currentLetter];
-            palabra = String.Join("", oWord);
-            //if(sDirection)
-            if (currentRow >= oMatrix.Length || currentCol >= oMatrix[currentRow].Length) // no hay mas letras en la sopa
-                return null;
-            else if (currentCol == oMatrix[currentRow].Length - 1) // ultima columna
-                return FindWord(oMatrix, currentRow + 1, 0, oWord, currentLetter, "N");
-
-            if (oMatrix[currentRow][currentCol] == oWord[currentLetter]) // letra encontrada
-            {
-                if (currentLetter == 0)
-                    oLocations.Add(new Location(currentRow, currentCol, "E"));
-                else
-                    oLocations.Add(new Location(currentRow, currentCol, GetNextPosition(sDirection)));
-
-                palabraEncontrada += oWord[currentLetter];
-                if (palabra == palabraEncontrada)
-                {
-                    //oLocations.Add(new Location(currentRow, currentCol, ""));
-                    return oLocations;
-                }
-
-                return FindWord(oMatrix, currentRow, currentCol, oWord, currentLetter + 1, "N");
-            }
-
-            Location res = null;
-            if (sDirection == "N" || sDirection == "")
-            {
-                res = FindN(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    //oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-                sDirection = "NE";
-            }
-
-            if (sDirection == "NE" || sDirection == "")
-            {
-                res = FindNE(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    //oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-                sDirection = "E";
-            }
-
-            if (sDirection == "E" || sDirection == "")
-            {
-                res = FindE(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    //oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-                sDirection = "SE";
-            }
-
-            if (sDirection == "SE" || sDirection == "")
-            {
-                res = FindSE(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    //oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-                sDirection = "S";
-            }
-
-            if (sDirection == "S" || sDirection == "")
-            {
-                res = FindS(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    //oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-                sDirection = "SW";
-            }
-            if (sDirection == "SW" || sDirection == "")
-            {
-                res = FindSW(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    //oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-                sDirection = "W";
-            }
-
-            if (sDirection == "W" || sDirection == "")
-            {
-                res = FindW(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    //oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-                sDirection = "NW";
-            }
-
-            if (sDirection == "NW" || sDirection == "")
-            {
-                res = FindNW(oMatrix, currentRow, currentCol, oWord, currentLetter);
-                if (res != null)
-                {
-                    //oLocations.Add(res);
-                    return FindWord(oMatrix, res.Row, res.Col, oWord, currentLetter, "");
-                }
-                sDirection = "";
-            }
-
-            var nNextPosition = "";
-            // no encontró la letra
-            if (oLocations.Count > 0)
-            {
-                nNextPosition = oLocations.Last().NextPosition;
-                if (oLocations.Count == 1)
-                {
-                    oLocations.RemoveAt(oLocations.Count - 1);
-                    palabraEncontrada = "";
-                    return null;
-                }
-                //oLocations.RemoveAt(oLocations.Count - 1);
-                //palabraEncontrada = palabraEncontrada.Substring(0, palabraEncontrada.Length - 1);
-            }
-            else
-            {
-                if (currentLetter > 0)
-                    currentLetter--;
-                nNextPosition = "N";
-                palabraEncontrada = palabraEncontrada.Substring(0, palabraEncontrada.Length - 1);
-            }
-
-            return FindWord(oMatrix, currentRow, currentCol + 1, oWord, currentLetter, nNextPosition);
-        }
-
     }
 }

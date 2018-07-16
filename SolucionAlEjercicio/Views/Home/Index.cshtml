@@ -1,34 +1,86 @@
 ﻿@{
-    ViewBag.Title = "Resultado de ejercicio";
+    ViewBag.Title = "Exercise Result";
 }
 
-<div id="dvTabla">
-    <a href="/home/resolve/">
-        <table id="resultado">
-            @{var oDatos = (List<string>)ViewData["Datos"]; }
-            @for (int linea = 0; linea < oDatos.Count; linea++)
-            {
-                if(linea == 0)
+<div class="row">
+    <div class="col-md-12">
+        <div id="dvTabla">
+            <table id="resultado">
+                @{var oData = (List<string>)ViewData["Data"]; }
+                @for (int row = 0; row < oData.Count; row++)
                 {
-                <tr>
-                    <th></th>
-                    @for (int letra = 0; letra < oDatos[linea].Length; letra++)
+                    if (row == 0)
                     {
-                        <th>@(letra)</th>
+                        <tr>
+                            <th></th>
+                            @for (int letter = 0; letter < oData[row].Length; letter++)
+                            {
+                                <th>@letter</th>
+                            }
+                        </tr>
                     }
-                </tr>
+                    <tr>
+                        @for (int letter = 0; letter < oData[row].Length; letter++)
+                        {
+                            if (letter == 0)
+                            {
+                                <th>@(row)</th>
+                            }
+                            <td>@oData[row][letter]</td>
+                        }
+                    </tr>
                 }
-                <tr>
-                @for (int letra = 0; letra < oDatos[linea].Length; letra++)
-                {
-                    if (letra == 0)
-                    {
-                        <th>@(linea)</th>
-                    }
-                    <td>@oDatos[linea][letra]</td>
-                }
-                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <fieldset>
+        <legend>Select an option from the words found</legend>
+        <div class="col-md-3">
+            <select id="selData" onchange="showJson()" class="col-md-12"></select>
+        </div>
+        <div class="col-md-9">
+            <pre id="txtData"></pre>
+        </div>
+    </fieldset>
+    <script>
+        @{var Result = Convert.ToString(ViewData["Result"]); }
+        var _Data = JSON.parse(@Html.Raw(Json.Encode(Result)));
+
+        var Data = _Data.map((item, index, array) => {
+            return {
+                word: array[index].reduce((last, actual) => last + actual.character, ""),
+                breakdown: item
             }
-        </table>
-    </a>
+        });
+
+        // print data
+        console.table(Data);
+
+        // load data in select
+        var selData = document.getElementById('selData');
+
+        for (var item in Data) {
+            option = document.createElement('option');
+            option.text = Data[item].word;
+            option.value = item;
+            selData.add(option);
+        }
+
+        function showJson() {
+            var selectedvalue = document.getElementById("selData").value;
+            var txtData = document.getElementById("txtData");
+            txtData.innerText = JSON.stringify(Data[selectedvalue]);
+        }
+
+        showJson();
+
+    </script>
+</div>
+<hr />
+<div class="row col-md-12">
+    <p>The values found are shown in the controls right above.</p>
+    <p>The values are stored in a variable called <b>Data</b>, accessible from the console.</p>
+    <p>Also values are printed on the same console.</p>
 </div>

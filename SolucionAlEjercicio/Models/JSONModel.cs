@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Web;
 
 namespace SolucionAlEjercicio.Models
@@ -30,18 +31,25 @@ namespace SolucionAlEjercicio.Models
             public List<string> Words { get; set; }
             public List<string> Lines { get; set; }
         }
+        [DataContract]
         public class Location
         {
-            public int Row { get; set; }
-            public int Col { get; set; }
+            [DataMember]
+            public int row { get; set; }
+            [DataMember]
+            public int column { get; set; }
+            [DataMember]
+            public char character { get; set; }
             public string NextPosition { get; set; }
 
-            public Location(int Row, int Col, string NextPosition)
+            public Location(int row, int column, char character, string NextPosition)
             {
-                this.Row = Row;
-                this.Col = Col;
+                this.row = row;
+                this.column = column;
+                this.character = character;
                 this.NextPosition = NextPosition;
             }
+            
         }
     }
 }
